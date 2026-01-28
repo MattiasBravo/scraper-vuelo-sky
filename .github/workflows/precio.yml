@@ -2,7 +2,7 @@ name: Monitor precio vuelo Sky
 
 on:
   schedule:
-    - cron: "0 */1 * * *"
+    - cron: "* * * * *"
   workflow_dispatch:
 
 jobs:
