@@ -1,1 +1,5 @@
 .env
+precio.txt
+sandbox_time.txt
+aviso_oferta.txt
+__pycache__/

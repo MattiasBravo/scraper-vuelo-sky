@@ -15,7 +15,7 @@ ARCHIVO = "precio.txt"
 SANDBOX_FILE = "sandbox_time.txt"
 AVISO_FILE = "aviso_oferta.txt"
 
-PRECIO_OBJETIVO = 150000  # 150 mil pesos
+PRECIO_OBJETIVO = 150000 
 
 account_sid = os.getenv("TWILIO_SID")
 auth_token = os.getenv("TWILIO_TOKEN")
@@ -98,7 +98,7 @@ with sync_playwright() as p:
         if horas > 60:
             print("⚠️ Sandbox pronto a expirar (menos de 12 horas)")
 
-    # Aviso inmediato si baja del precio objetivo (solo una vez)
+    # Aviso inmediato si baja del precio objetivo
     if precio < PRECIO_OBJETIVO and not ya_aviso_oferta():
         enviar_whatsapp(
             f"🚨 OFERTA DETECTADA 🚨\n"
