@@ -2,7 +2,7 @@ name: Monitor precio vuelo Sky
 
 on:
   schedule:
-    - cron: "0 * * * *"
+    - cron: "0 */4 * * *"
   workflow_dispatch:
 
 permissions:
@@ -43,7 +43,9 @@ jobs:
           git config user.name "github-actions"
           git config user.email "actions@github.com"
 
+          git stash --include-untracked
           git pull --rebase origin main
+          git stash pop || true
 
           for file in precio.txt aviso_oferta.txt sandbox_time.txt; do
             if [ -f "$file" ]; then
