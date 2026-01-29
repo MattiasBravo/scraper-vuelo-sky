@@ -5,26 +5,25 @@ on:
     - cron: "*/10 * * * *"  # Cada 10 minutos
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   monitor:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Traer el repo y el estado anterior
       - uses: actions/checkout@v4
 
-      # 2️⃣ Configurar Python
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      # 3️⃣ Instalar dependencias
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
           python -m playwright install chromium --with-deps
 
-      # 4️⃣ Ejecutar tu script
       - name: Run script
         env:
           TWILIO_SID: ${{ secrets.TWILIO_SID }}
@@ -33,19 +32,16 @@ jobs:
           MY_PHONE: ${{ secrets.MY_PHONE }}
         run: python main.py
 
-      # 5️⃣ Guardar el estado para la siguiente ejecución
       - name: Commit state
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          
-          # Agregar solo archivos existentes, forzando si están en .gitignore
+
           for file in precio.txt aviso_oferta.txt sandbox_time.txt; do
             if [ -f "$file" ]; then
               git add -f "$file"
             fi
           done
 
-          # Commitear solo si hay cambios
           git diff --cached --quiet || git commit -m "Actualizar estado precio"
           git push
