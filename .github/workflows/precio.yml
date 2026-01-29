@@ -18,10 +18,17 @@ jobs:
 
       - name: Install dependencies
         run: |
-           pip install -r requirements.txt
-           python -m playwright install chromium --with-deps
+          pip install -r requirements.txt
+          python -m playwright install chromium --with-deps
 
+      # ⬇️ DESCARGAR ESTADO ANTERIOR
+      - name: Download state
+        uses: actions/download-artifact@v4
+        with:
+          name: estado-precio
+        continue-on-error: true
 
+      # ▶️ EJECUTAR SCRIPT
       - name: Run script
         env:
           TWILIO_SID: ${{ secrets.TWILIO_SID }}
@@ -29,3 +36,13 @@ jobs:
           TWILIO_PHONE: ${{ secrets.TWILIO_PHONE }}
           MY_PHONE: ${{ secrets.MY_PHONE }}
         run: python main.py
+
+      # ⬆️ GUARDAR ESTADO PARA EL SIGUIENTE RUN
+      - name: Upload state
+        uses: actions/upload-artifact@v4
+        with:
+          name: estado-precio
+          path: |
+            precio.txt
+            aviso_oferta.txt
+            sandbox_time.txt
