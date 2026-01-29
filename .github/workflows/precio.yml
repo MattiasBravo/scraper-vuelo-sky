@@ -2,7 +2,7 @@ name: Monitor precio vuelo Sky
 
 on:
   schedule:
-   - cron: "*/10 * * * *"
+    - cron: "*/10 * * * *"  # Cada 10 minutos
   workflow_dispatch:
 
 jobs:
@@ -10,25 +10,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Traer el repo y el estado anterior
       - uses: actions/checkout@v4
 
+      # 2️⃣ Configurar Python
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
+      # 3️⃣ Instalar dependencias
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
           python -m playwright install chromium --with-deps
 
-      # ⬇️ DESCARGAR ESTADO ANTERIOR
-      - name: Download state
-        uses: actions/download-artifact@v4
-        with:
-          name: estado-precio
-        continue-on-error: true
-
-      # ▶️ EJECUTAR SCRIPT
+      # 4️⃣ Ejecutar tu script
       - name: Run script
         env:
           TWILIO_SID: ${{ secrets.TWILIO_SID }}
@@ -37,12 +33,12 @@ jobs:
           MY_PHONE: ${{ secrets.MY_PHONE }}
         run: python main.py
 
-      # ⬆️ GUARDAR ESTADO PARA EL SIGUIENTE RUN
-      - name: Upload state
-        uses: actions/upload-artifact@v4
-        with:
-          name: estado-precio
-          path: |
-            precio.txt
-            aviso_oferta.txt
-            sandbox_time.txt
+      # 5️⃣ Guardar el estado para la siguiente ejecución
+      - name: Commit state
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add precio.txt aviso_oferta.txt sandbox_time.txt
+          # Solo commitear si hay cambios
+          git diff --cached --quiet || git commit -m "Actualizar estado precio"
+          git push
