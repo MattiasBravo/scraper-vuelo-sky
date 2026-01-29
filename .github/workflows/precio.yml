@@ -34,14 +34,18 @@ jobs:
 
       - name: Commit state
         run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
+            git config user.name "github-actions"
+            git config user.email "actions@github.com"
+        
+            git pull --rebase origin main
+        
+            for file in precio.txt aviso_oferta.txt sandbox_time.txt; do
+              if [ -f "$file" ]; then
+                git add -f "$file"
+              fi
+            done
+        
+            git diff --cached --quiet || git commit -m "Actualizar estado precio"
+            git push
 
-          for file in precio.txt aviso_oferta.txt sandbox_time.txt; do
-            if [ -f "$file" ]; then
-              git add -f "$file"
-            fi
-          done
-
-          git diff --cached --quiet || git commit -m "Actualizar estado precio"
-          git push
+      
