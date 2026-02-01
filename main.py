@@ -4,6 +4,7 @@ from twilio.base.exceptions import TwilioRestException
 import time
 import os
 from dotenv import load_dotenv
+from datetime import datetime
 
 load_dotenv()
 
@@ -16,7 +17,7 @@ SANDBOX_FILE = "sandbox_time.txt"
 AVISO_FILE = "aviso_oferta.txt"
 
 PRECIO_OBJETIVO = 150000 
-
+hora = datetime.now().strftime("%H:%M")
 account_sid = os.getenv("TWILIO_SID")
 auth_token = os.getenv("TWILIO_TOKEN")
 from_phone = os.getenv("TWILIO_PHONE")
@@ -111,6 +112,7 @@ with sync_playwright() as p:
 
     #Aviso normal cada 6 horas
     enviar_whatsapp(
+        f"{hora}\n"
         f"⏰ Estado del precio\n"
         f"✈️ Vuelo GRU → CCP\n"
         f"📅 01-03-2026\n"
