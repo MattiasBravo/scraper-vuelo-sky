@@ -112,7 +112,7 @@ with sync_playwright() as p:
 
     #Aviso normal cada 6 horas
     enviar_whatsapp(
-        f"{hora}\n"
+        f"⏰ Hora local: {hora}\n"
         f"⏰ Estado del precio\n"
         f"✈️ Vuelo GRU → CCP\n"
         f"📅 01-03-2026\n"
